@@ -82,9 +82,23 @@ Sources:
 
 ## Fleet counting
 
-Waymo publicly reports a U.S. fleet of approximately 3,000 robotaxis (early 2026) and is on pace for one million paid rides per week by year-end. **Waymo does not publish per-city vehicle counts.** The only granular number reported is that more than a third of the fleet is in the San Francisco Bay Area.
+Waymo publicly reports a U.S. fleet of approximately 3,000 robotaxis (early 2026) and is on pace for one million paid rides per week by year-end. **Waymo does not voluntarily publish per-city vehicle counts.** Two kinds of per-city data exist:
 
-Bubble sizes on the map therefore reflect a qualitative tier — small, medium, large, largest — derived from launch order, market size, and reported relative scale, not exact vehicle counts. Treat them as ordinal, not cardinal.
+**Regulator-confirmed (California only).** California's Public Utilities Commission requires quarterly fleet and operations reports from autonomous-vehicle ride-share permit holders. The August 2025 CPUC filing showed Waymo with 1,429 total vehicles in California, of which 875 were associated with the San Francisco terminal. The remainder are split between Los Angeles County and ancillary terminals. CPUC reports redact some fields Waymo claims as confidential. Waymo separately confirmed >800 vehicles in commercial Bay Area operation in mid-2025 — its largest public Bay Area number to date.
+
+**Analyst estimates (non-California cities).** Outside California there is no equivalent regulator. Numbers reported in trade press for Phoenix (~500), Los Angeles (~700), Austin (~200), and Atlanta (~100) are extrapolations and analyst estimates, not Waymo-disclosed figures. They circulate widely but are not primary-source confirmed. The map labels these explicitly as "analyst estimate."
+
+**Newer markets (Miami, Dallas, Houston, San Antonio, Orlando).** No reliable public estimate exists. The map says "Not publicly broken out."
+
+**Nashville.** Waymo's own April 2026 announcement said "dozens of vehicles" without giving a specific number. The map quotes the language directly.
+
+**New York City.** Eight vehicles operated under DMV testing permits during 2024–25; those permits expired March 31, 2026, and no current operations exist.
+
+Bubble sizes on the map are tiered (small / medium / large / largest) and follow these numbers where available, qualitative judgment where not. Treat the bubbles as ordinal rather than as exact vehicle counts.
+
+### A note on aggregator newsletters
+
+Earlier versions of this map cited The Driverless Digest (a Substack newsletter) for per-city fleet numbers. After review, those numbers turned out to be the newsletter's own extrapolations rather than primary-source disclosures, and at least one estimate (Atlanta) circulated in inverted form across the trade press. The current map uses primary regulatory data (CPUC) where it exists, Waymo's own statements, and otherwise labels figures as analyst estimates. The newsletter remains useful for finding primary sources but isn't itself cited as authoritative.
 
 ---
 
