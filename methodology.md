@@ -21,7 +21,7 @@ Three categories, layered as a light background tint:
 
 - **Permissive** — driverless commercial operation is legally allowed under existing state law (with permitting requirements that vary).
 - **No autonomous-vehicle statute** — the state has not enacted AV-specific legislation; operation is neither explicitly authorized nor prohibited, and varies by interpretation.
-- **Effectively bars driverless commercial** — state law or regulation requires a human safety operator, has no commercial pathway, or has explicitly excluded commercial driverless rideshare.
+- **Effectively bars driverless commercial** — state law or regulation requires a human safety operator behind the wheel at all times, has no commercial pathway, or has explicitly excluded commercial driverless rideshare. Currently New York, Massachusetts, and New Jersey.
 
 **This landscape changes often.** State legislatures are actively considering AV bills; classifications here reflect publicly reported status as of the "last updated" date and should be re-checked before publication.
 
@@ -92,12 +92,20 @@ Bubble sizes on the map therefore reflect a qualitative tier — small, medium, 
 
 Underlying source for every state: National Conference of State Legislatures (NCSL) autonomous-vehicle legislation tracker, supplemented by Baker Donelson's 50-state autonomous-vehicle survey and recent reporting where statutes have been amended or interpretations have shifted.
 
-**Permissive (driverless commercial allowed under enacted statute):** AL, AZ, AR, CA, CO, DE, FL, GA, IL, IN, IA, KY, LA, MA, MI, MN, NE, NV, NH, NC, ND, OH, OK, PA, SC, TN, TX, UT, VA, WI.
+**Permissive (driverless commercial allowed under enacted statute or active state permits):** AL, AZ, AR, CA, CO, DE, FL, GA, IN, IA, KY, LA, MI, MN, NE, NV, NH, NC, ND, OH, OK, PA, SC, TN, TX, UT, VA, WI.
 
-**No AV statute (ambiguous):** AK, CT, DC, HI, ID, KS, ME, MD, MS, MO, MT, NJ, NM, OR, RI, SD, VT, WA, WV, WY.
+**No AV statute (ambiguous):** AK, CT, DC, HI, ID, IL, KS, ME, MD, MS, MO, MT, NM, OR, RI, SD, VT, WA, WV, WY.
 
 **Effectively bars driverless commercial:**
-- **NY** — state testing required licensed human operators; commercial driverless rideshare proposal was withdrawn in February 2026; NYC is explicitly excluded from any state-level pathway.
+- **NY** — state law requires drivers to keep a hand on the wheel at all times. NYC testing required licensed human operators; permits expired March 31, 2026. Gov. Hochul's commercial driverless rideshare proposal was withdrawn in February 2026 with NYC explicitly excluded.
+- **MA** — Massachusetts state guidance requires a human safety operator in the driver's seat at all times during AV operation. Sen. Markey has opened a federal investigation into AV companies' use of remote operators. Boston is separately debating an ordinance that would require an in-vehicle human operator and pause AV deployment pending a study.
+- **NJ** — no enabling AV statute. The New Jersey Advanced Autonomous Vehicle Task Force recommended that all on-road testing be conducted with a safety driver present. There is no state-sanctioned pathway for fully driverless commercial service.
+
+A few additional notes:
+- **Seattle** has a local rule requiring a human driver in any AV operating on city streets, even though Washington state has no AV statute (and is therefore classified ambiguous on the map).
+- **Boston's** proposed ordinance has not been enacted; if it passes, it would functionally make Massachusetts even more restrictive.
+- **Illinois** has been reclassified from permissive to ambiguous: the state has no comprehensive AV statute and bills remain under consideration.
+- **Florida** older sources said it required a human operator during testing; that's outdated. Waymo currently runs fully driverless service in Miami and Orlando.
 
 A handful of states sit on the boundary between these categories — interpretations differ between NCSL, industry trade groups, and academic surveys. Where reasonable people disagree, the map errs on the side of "ambiguous" rather than picking a side. If you're going to act on a specific state's status (legal, business, or editorial), verify directly with that state's DMV or transportation department.
 
