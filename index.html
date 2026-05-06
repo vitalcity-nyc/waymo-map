@@ -87,7 +87,7 @@
   }
   .vc-waymo-embed .vc-map {
     width: 100%;
-    height: 520px;
+    height: 440px;
     background: #f5f5f5;
   }
   .vc-waymo-embed .vc-legend {
@@ -255,12 +255,12 @@
   .vc-waymo-embed.compact .vc-header,
   .vc-waymo-embed.compact .vc-stats { display: none; }
   .vc-waymo-embed.compact { border-radius: 0; border: none; max-width: none; }
-  .vc-waymo-embed.compact .vc-map { height: 480px; }
+  .vc-waymo-embed.compact .vc-map { height: 440px; }
 
   /* Mobile */
   @media (max-width: 560px) {
     .vc-waymo-embed .vc-title { font-size: 19px; }
-    .vc-waymo-embed .vc-map { height: 420px; }
+    .vc-waymo-embed .vc-map { height: 380px; }
     .vc-waymo-embed .vc-stats { gap: 14px; padding: 10px 14px; }
     .vc-waymo-embed .vc-stat .vc-num { font-size: 18px; }
     .vc-waymo-embed .vc-header { padding: 12px 14px 8px; }
@@ -367,16 +367,16 @@
   // shorter classification line via the popup template.
   const stateNotes = {
     NY: {
-      headline: "Effectively bars driverless commercial service",
-      body: "New York state law requires drivers to keep a hand on the wheel at all times. New York City permitted Waymo to test eight vehicles with safety drivers starting in 2024; those permits expired March 31, 2026. Gov. Kathy Hochul's commercial-rideshare proposal was withdrawn in February 2026 with NYC explicitly excluded. Mayor Mamdani has not committed to renewing local permits."
+      headline: "Hand-on-wheel law and no commercial pathway",
+      body: "New York Vehicle and Traffic Law § 1226 requires drivers to keep at least one hand on the steering mechanism at all times. New York City permitted Waymo to test eight vehicles with safety drivers starting in 2024; those permits expired March 31, 2026. In February 2026, Gov. Kathy Hochul withdrew her commercial-rideshare proposal — a proposal that would itself have explicitly excluded New York City. Pending bills A3650 and S00344 would create an exemption to § 1226 for fully autonomous vehicles, but have not been enacted. Mayor Mamdani has not committed to renewing local permits."
     },
     MA: {
-      headline: "Effectively bars driverless commercial service",
-      body: "Massachusetts state guidance requires a human safety operator in the driver's seat at all times during autonomous-vehicle operation. Sen. Ed Markey opened a federal investigation into AV companies' use of remote operators in 2025. Boston is separately debating a city ordinance that would require an in-vehicle human operator and pause AV deployment pending a study."
+      headline: "Human-operator rules and no authorized robotaxi service",
+      body: "Massachusetts permits AV testing only when a human being is inside the vehicle at all times, under MassDOT and Registry of Motor Vehicles rules. A commercial-deployment pathway exists in principle via a MassDOT autonomous-operation license, but no robotaxi service has been authorized under it. Boston is separately debating a city ordinance that would explicitly require an in-vehicle human operator and pause AV deployment pending a study; the City Council declined to vote on it in October 2025. Sen. Ed Markey opened a federal investigation into AV companies' use of remote operators in 2025."
     },
     NJ: {
-      headline: "Effectively bars driverless commercial service",
-      body: "New Jersey has no enabling autonomous-vehicle statute. The state's Advanced Autonomous Vehicle Task Force recommended that all on-road testing be conducted with a safety driver present. There is no state-sanctioned pathway for fully driverless commercial service."
+      headline: "No comprehensive AV statute; pilot limited to testbeds",
+      body: "New Jersey has no enacted comprehensive autonomous-vehicle statute. The state's Advanced Autonomous Vehicle Task Force, in its 2020 report, recommended that all on-road testing be conducted with a safety driver present. A pending bill (A3968) would establish a five-year pilot program for autonomous-vehicle testers, limited to closed and open-road testbeds. No commercial driverless rideshare framework has been enacted."
     }
   };
 
