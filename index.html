@@ -1,0 +1,452 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Waymo in America — robotaxi service map</title>
+<meta name="description" content="Where Waymo robotaxis are running, coming, or stalled — and where state law currently bars driverless commercial operation.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+  /* ---- All styles scoped under .vc-waymo-embed so nothing leaks into a Ghost host page ---- */
+  .vc-waymo-embed,
+  .vc-waymo-embed * {
+    box-sizing: border-box;
+  }
+  .vc-waymo-embed {
+    --vc-black: #050507;
+    --vc-white: #ffffff;
+    --vc-cloud: #dddddd;
+    --vc-charcoal: #707175;
+    --vc-cerulean: #217ebe;
+    --vc-orange: #ff7c53;
+    --vc-magenta: #e7466d;
+    --vc-chartreuse: #dde44c;
+    --vc-rose: #cea9be;
+    --vc-indigo: #394882;
+
+    font-family: "Atlas Grotesk", "halyard-text", "Inter", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+    color: var(--vc-black);
+    background: var(--vc-white);
+    line-height: 1.4;
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    border: 1px solid var(--vc-cloud);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .vc-waymo-embed .vc-header {
+    padding: 14px 18px 10px;
+    border-bottom: 1px solid var(--vc-cloud);
+  }
+  .vc-waymo-embed .vc-kicker {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--vc-charcoal);
+  }
+  .vc-waymo-embed .vc-kicker .vc-kicker-sep { color: var(--vc-cloud); margin: 0 6px; }
+  .vc-waymo-embed .vc-title {
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 4px 0 4px;
+    letter-spacing: -0.01em;
+  }
+  .vc-waymo-embed .vc-dek {
+    font-size: 14px;
+    color: var(--vc-charcoal);
+    max-width: 720px;
+  }
+  .vc-waymo-embed .vc-stats {
+    display: flex;
+    gap: 22px;
+    padding: 10px 18px;
+    border-bottom: 1px solid var(--vc-cloud);
+    flex-wrap: wrap;
+    background: #fafafa;
+  }
+  .vc-waymo-embed .vc-stat .vc-num {
+    display: block;
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.01em;
+  }
+  .vc-waymo-embed .vc-stat .vc-lbl {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--vc-charcoal);
+    margin-top: 4px;
+    display: block;
+  }
+  .vc-waymo-embed .vc-map {
+    width: 100%;
+    height: 520px;
+    background: #f5f5f5;
+  }
+  .vc-waymo-embed .vc-legend {
+    padding: 12px 18px;
+    border-top: 1px solid var(--vc-cloud);
+    font-size: 12px;
+    color: var(--vc-black);
+  }
+  .vc-waymo-embed .vc-legend-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px 22px;
+    align-items: center;
+  }
+  .vc-waymo-embed .vc-legend-row + .vc-legend-row {
+    margin-top: 8px;
+  }
+  .vc-waymo-embed .vc-legend-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--vc-charcoal);
+    font-weight: 600;
+    min-width: 86px;
+  }
+  .vc-waymo-embed .vc-legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .vc-waymo-embed .vc-swatch {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    flex: 0 0 14px;
+  }
+  .vc-waymo-embed .vc-swatch.s-op   { background: var(--vc-cerulean); }
+  .vc-waymo-embed .vc-swatch.s-ann  { background: transparent; border: 2px dashed var(--vc-orange); }
+  .vc-waymo-embed .vc-swatch.s-test { background: var(--vc-magenta); position: relative; }
+  .vc-waymo-embed .vc-swatch.s-test::before,
+  .vc-waymo-embed .vc-swatch.s-test::after {
+    content: "";
+    position: absolute;
+    left: 50%; top: 50%;
+    width: 14px; height: 2px;
+    background: var(--vc-white);
+    transform: translate(-50%, -50%) rotate(45deg);
+  }
+  .vc-waymo-embed .vc-swatch.s-test::after { transform: translate(-50%, -50%) rotate(-45deg); }
+  .vc-waymo-embed .vc-swatch.sq {
+    border-radius: 2px;
+    width: 16px; height: 12px; flex: 0 0 16px;
+  }
+  .vc-waymo-embed .vc-swatch.sq.permissive { background: var(--vc-white); border: 1px solid var(--vc-cloud); }
+  .vc-waymo-embed .vc-swatch.sq.ambiguous  { background: repeating-linear-gradient(45deg, #f0f0f0 0 4px, #fafafa 4px 8px); border: 1px solid var(--vc-cloud); }
+  .vc-waymo-embed .vc-swatch.sq.restrictive { background: rgba(231, 70, 109, 0.22); border: 1px solid rgba(231, 70, 109, 0.5); }
+  .vc-waymo-embed .vc-caveat {
+    font-size: 11px;
+    color: var(--vc-charcoal);
+    margin-top: 8px;
+    line-height: 1.45;
+  }
+  .vc-waymo-embed .vc-footer {
+    padding: 10px 18px;
+    border-top: 1px solid var(--vc-cloud);
+    font-size: 11px;
+    color: var(--vc-charcoal);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .vc-waymo-embed .vc-footer a { color: var(--vc-cerulean); text-decoration: none; border-bottom: 1px solid currentColor; }
+  .vc-waymo-embed .vc-footer a:hover { color: var(--vc-indigo); }
+
+  /* Leaflet popup look */
+  .vc-waymo-embed .leaflet-popup-content-wrapper {
+    border-radius: 4px;
+    box-shadow: 0 2px 12px rgba(5,5,7,0.18);
+  }
+  .vc-waymo-embed .leaflet-popup-content {
+    margin: 10px 12px;
+    font-size: 12.5px;
+    line-height: 1.45;
+    font-family: inherit;
+  }
+  .vc-waymo-embed .vc-pop-name {
+    font-weight: 700;
+    font-size: 13.5px;
+    margin-bottom: 2px;
+  }
+  .vc-waymo-embed .vc-pop-tag {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 1px 6px;
+    border-radius: 2px;
+    margin-bottom: 6px;
+  }
+  .vc-waymo-embed .vc-pop-tag.t-op   { background: var(--vc-cerulean); color: var(--vc-white); }
+  .vc-waymo-embed .vc-pop-tag.t-ann  { background: var(--vc-orange); color: var(--vc-black); }
+  .vc-waymo-embed .vc-pop-tag.t-test { background: var(--vc-magenta); color: var(--vc-white); }
+  .vc-waymo-embed .vc-pop-meta {
+    font-size: 11px;
+    color: var(--vc-charcoal);
+    margin-top: 4px;
+  }
+
+  /* Compact mode (iframe embed): tighten padding, drop the title block */
+  .vc-waymo-embed.compact .vc-header,
+  .vc-waymo-embed.compact .vc-stats { display: none; }
+  .vc-waymo-embed.compact { border-radius: 0; border: none; max-width: none; }
+  .vc-waymo-embed.compact .vc-map { height: 480px; }
+
+  /* Mobile */
+  @media (max-width: 560px) {
+    .vc-waymo-embed .vc-title { font-size: 19px; }
+    .vc-waymo-embed .vc-map { height: 420px; }
+    .vc-waymo-embed .vc-stats { gap: 14px; padding: 10px 14px; }
+    .vc-waymo-embed .vc-stat .vc-num { font-size: 18px; }
+    .vc-waymo-embed .vc-header { padding: 12px 14px 8px; }
+    .vc-waymo-embed .vc-legend { padding: 10px 14px; font-size: 11.5px; }
+    .vc-waymo-embed .vc-footer { padding: 10px 14px; }
+  }
+</style>
+</head>
+<body style="margin:0; padding:0; background:#fff;">
+
+<div class="vc-waymo-embed" id="vcWaymoEmbed">
+  <header class="vc-header">
+    <div class="vc-kicker">Robotaxis<span class="vc-kicker-sep">/</span>Waymo in America</div>
+    <h1 class="vc-title">Where driverless rides are running, coming, or stalled</h1>
+    <p class="vc-dek">Waymo serves about 3,000 robotaxis across 10 U.S. cities, with another nine announced for 2026. New York City sits in a different category: tested, then halted.</p>
+  </header>
+
+  <div class="vc-stats">
+    <div class="vc-stat"><span class="vc-num">10</span><span class="vc-lbl">cities operating</span></div>
+    <div class="vc-stat"><span class="vc-num">9</span><span class="vc-lbl">announced for 2026</span></div>
+    <div class="vc-stat"><span class="vc-num">~3,000</span><span class="vc-lbl">vehicles in service</span></div>
+    <div class="vc-stat"><span class="vc-num">~400k</span><span class="vc-lbl">paid rides per week</span></div>
+  </div>
+
+  <div id="vcMap" class="vc-map" role="region" aria-label="Waymo deployment map"></div>
+
+  <div class="vc-legend">
+    <div class="vc-legend-row">
+      <span class="vc-legend-label">Service</span>
+      <span class="vc-legend-item"><span class="vc-swatch s-op"></span>Operating (public rides)</span>
+      <span class="vc-legend-item"><span class="vc-swatch s-ann"></span>Announced for 2026</span>
+      <span class="vc-legend-item"><span class="vc-swatch s-test"></span>Tested, not operating</span>
+    </div>
+    <div class="vc-legend-row">
+      <span class="vc-legend-label">State law</span>
+      <span class="vc-legend-item"><span class="vc-swatch sq permissive"></span>Driverless commercial allowed</span>
+      <span class="vc-legend-item"><span class="vc-swatch sq ambiguous"></span>No autonomous-vehicle statute</span>
+      <span class="vc-legend-item"><span class="vc-swatch sq restrictive"></span>Effectively bars driverless commercial</span>
+    </div>
+    <p class="vc-caveat">Bubble size reflects an estimated fleet tier; Waymo doesn't publish per-city counts. Testing isn't operating: New York permitted Waymo to test eight vehicles with safety drivers in 2024–25, but those permits expired March 31, 2026, and no commercial pathway exists. State-law classifications follow the National Conference of State Legislatures and recent reporting; this landscape shifts often.</p>
+  </div>
+
+  <div class="vc-footer">
+    <span>Data as of May 6, 2026 · Map: Vital City</span>
+    <span><a href="methodology.md" target="_blank" rel="noopener">Sources &amp; method &rarr;</a></span>
+  </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+(function () {
+  // ---------------- DATA ----------------
+  // Status: operating | announced | tested_paused
+  // tier: 1 (small) – 4 (largest, SF Bay)
+  const cities = [
+    { name: "Phoenix",            state: "AZ", lat: 33.4484, lng: -112.0740, status: "operating", launch: "2020-10",       tier: 3, note: "Waymo's first public market; metro-wide service.", sources: ["techcrunch","9to5google"] },
+    { name: "San Francisco Bay",  state: "CA", lat: 37.7749, lng: -122.4194, status: "operating", launch: "2024-08",       tier: 4, note: "Largest market — over a third of the fleet.", sources: ["axios","carboncredits"] },
+    { name: "Los Angeles",        state: "CA", lat: 34.0522, lng: -118.2437, status: "operating", launch: "2024-11",       tier: 3, note: "Public service across central LA County.", sources: ["techcrunch"] },
+    { name: "Austin",             state: "TX", lat: 30.2672, lng:  -97.7431, status: "operating", launch: "2025-03",       tier: 2, note: "Public rides via the Uber app.", sources: ["techcrunch"] },
+    { name: "Atlanta",            state: "GA", lat: 33.7490, lng:  -84.3880, status: "operating", launch: "2025-06",       tier: 2, note: "Public rides via the Uber app.", sources: ["techcrunch"] },
+    { name: "Miami",              state: "FL", lat: 25.7617, lng:  -80.1918, status: "operating", launch: "2026-02",       tier: 2, note: "Public service launched early 2026.", sources: ["9to5google"] },
+    { name: "Dallas",             state: "TX", lat: 32.7767, lng:  -96.7970, status: "operating", launch: "2026-02-24",    tier: 2, note: "Fully driverless public service.", sources: ["9to5google","techcrunch"] },
+    { name: "Houston",            state: "TX", lat: 29.7604, lng:  -95.3698, status: "operating", launch: "2026-02-24",    tier: 2, note: "Fully driverless public service.", sources: ["9to5google","techcrunch"] },
+    { name: "San Antonio",        state: "TX", lat: 29.4241, lng:  -98.4936, status: "operating", launch: "2026-02-24",    tier: 1, note: "Fully driverless public service.", sources: ["9to5google","techcrunch"] },
+    { name: "Orlando",            state: "FL", lat: 28.5383, lng:  -81.3792, status: "operating", launch: "2026-02-24",    tier: 1, note: "Fully driverless public service.", sources: ["9to5google","techcrunch"] },
+
+    { name: "Washington, D.C.",   state: "DC", lat: 38.9072, lng:  -77.0369, status: "announced",     launch: "2026",          tier: 2, note: "Announced for 2026 launch.", sources: ["robotreport"] },
+    { name: "Nashville",          state: "TN", lat: 36.1627, lng:  -86.7816, status: "announced",     launch: "Summer 2026",   tier: 1, note: "Slated for summer 2026 with Lyft.", sources: ["robotreport"] },
+    { name: "Las Vegas",          state: "NV", lat: 36.1699, lng: -115.1398, status: "announced",     launch: "2026",          tier: 1, note: "Announced for 2026 launch.", sources: ["robotreport"] },
+    { name: "Detroit",            state: "MI", lat: 42.3314, lng:  -83.0458, status: "announced",     launch: "2026",          tier: 1, note: "Announced for 2026 launch.", sources: ["robotreport"] },
+    { name: "San Diego",          state: "CA", lat: 32.7157, lng: -117.1611, status: "announced",     launch: "2026",          tier: 1, note: "Announced for 2026 launch.", sources: ["robotreport"] },
+    { name: "Denver",             state: "CO", lat: 39.7392, lng: -104.9903, status: "announced",     launch: "2026",          tier: 1, note: "Announced for 2026 launch.", sources: ["robotreport"] },
+    { name: "Minneapolis",        state: "MN", lat: 44.9778, lng:  -93.2650, status: "announced",     launch: "2026",          tier: 1, note: "Announced November 2025 for 2026 launch.", sources: ["techcrunch"] },
+    { name: "New Orleans",        state: "LA", lat: 29.9511, lng:  -90.0715, status: "announced",     launch: "2026",          tier: 1, note: "Announced November 2025 for 2026 launch.", sources: ["techcrunch"] },
+    { name: "Tampa",              state: "FL", lat: 27.9506, lng:  -82.4572, status: "announced",     launch: "2026",          tier: 1, note: "Announced November 2025 for 2026 launch.", sources: ["techcrunch"] },
+
+    { name: "New York City",      state: "NY", lat: 40.7831, lng:  -73.9712, status: "tested_paused", launch: "Tested 2024–25", tier: 1, note: "Eight cars tested with safety drivers in Manhattan and Downtown Brooklyn. State testing permits expired March 31, 2026; Gov. Hochul withdrew her commercial-rideshare proposal in February with NYC explicitly excluded; Mayor Mamdani has not committed to renewal.", sources: ["thecity","streetsblog","cnbc"] }
+  ];
+
+  // State legal landscape (best-effort, sourced in methodology.md)
+  // permissive | ambiguous | restrictive
+  const stateClass = {
+    AL:"permissive", AK:"ambiguous", AZ:"permissive", AR:"permissive", CA:"permissive",
+    CO:"permissive", CT:"ambiguous", DE:"permissive", DC:"ambiguous", FL:"permissive",
+    GA:"permissive", HI:"ambiguous", ID:"ambiguous", IL:"permissive", IN:"permissive",
+    IA:"permissive", KS:"ambiguous", KY:"permissive", LA:"permissive", ME:"ambiguous",
+    MD:"ambiguous", MA:"permissive", MI:"permissive", MN:"permissive", MS:"ambiguous",
+    MO:"ambiguous", MT:"ambiguous", NE:"permissive", NV:"permissive", NH:"permissive",
+    NJ:"ambiguous", NM:"ambiguous", NY:"restrictive", NC:"permissive", ND:"permissive",
+    OH:"permissive", OK:"permissive", OR:"ambiguous", PA:"permissive", RI:"ambiguous",
+    SC:"permissive", SD:"ambiguous", TN:"permissive", TX:"permissive", UT:"permissive",
+    VT:"ambiguous", VA:"permissive", WA:"ambiguous", WV:"ambiguous", WI:"permissive", WY:"ambiguous"
+  };
+
+  const stateNameToAbbr = {
+    "Alabama":"AL","Alaska":"AK","Arizona":"AZ","Arkansas":"AR","California":"CA",
+    "Colorado":"CO","Connecticut":"CT","Delaware":"DE","District of Columbia":"DC","Florida":"FL",
+    "Georgia":"GA","Hawaii":"HI","Idaho":"ID","Illinois":"IL","Indiana":"IN",
+    "Iowa":"IA","Kansas":"KS","Kentucky":"KY","Louisiana":"LA","Maine":"ME",
+    "Maryland":"MD","Massachusetts":"MA","Michigan":"MI","Minnesota":"MN","Mississippi":"MS",
+    "Missouri":"MO","Montana":"MT","Nebraska":"NE","Nevada":"NV","New Hampshire":"NH",
+    "New Jersey":"NJ","New Mexico":"NM","New York":"NY","North Carolina":"NC","North Dakota":"ND",
+    "Ohio":"OH","Oklahoma":"OK","Oregon":"OR","Pennsylvania":"PA","Rhode Island":"RI",
+    "South Carolina":"SC","South Dakota":"SD","Tennessee":"TN","Texas":"TX","Utah":"UT",
+    "Vermont":"VT","Virginia":"VA","Washington":"WA","West Virginia":"WV","Wisconsin":"WI","Wyoming":"WY",
+    "Puerto Rico":"PR"
+  };
+
+  // ---------------- COMPACT MODE ----------------
+  const params = new URLSearchParams(window.location.search);
+  if (params.get("mode") === "compact") {
+    document.getElementById("vcWaymoEmbed").classList.add("compact");
+  }
+
+  // ---------------- MAP ----------------
+  const map = L.map("vcMap", {
+    preferCanvas: true,
+    zoomControl: true,
+    scrollWheelZoom: false,
+    attributionControl: true,
+    worldCopyJump: false,
+    minZoom: 3,
+    maxZoom: 9,
+    maxBounds: [[8, -150], [62, -50]],
+    maxBoundsViscosity: 0.85
+  });
+
+  L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+    subdomains: "abcd",
+    maxZoom: 18
+  }).addTo(map);
+
+  // Pick a sensible CONUS view per viewport; fitBounds zooms out too far on wide screens
+  const _mapW = document.getElementById("vcMap").clientWidth;
+  const _z = _mapW >= 1000 ? 4 : _mapW >= 700 ? 4 : _mapW >= 480 ? 3 : 3;
+  map.setView([39.0, -97.0], _z);
+
+  // ---------------- STATE CHOROPLETH ----------------
+  const stateStyle = (klass) => {
+    if (klass === "restrictive") {
+      return { fillColor: "#e7466d", fillOpacity: 0.22, color: "#e7466d", weight: 1, opacity: 0.55 };
+    }
+    if (klass === "ambiguous") {
+      return { fillColor: "#dddddd", fillOpacity: 0.35, color: "#cfcfcf", weight: 0.6, opacity: 0.7 };
+    }
+    return { fillColor: "#ffffff", fillOpacity: 0, color: "#cfcfcf", weight: 0.6, opacity: 0.7 };
+  };
+
+  const STATES_URL = "https://raw.githubusercontent.com/PublicaMundi/MappingAPI/master/data/geojson/us-states.json";
+  fetch(STATES_URL)
+    .then(r => r.json())
+    .then(geo => {
+      L.geoJSON(geo, {
+        style: f => {
+          const abbr = stateNameToAbbr[f.properties.name] || stateNameToAbbr[f.properties.NAME] || "";
+          return stateStyle(stateClass[abbr] || "permissive");
+        },
+        interactive: false
+      }).addTo(map);
+      addCityMarkers();
+    })
+    .catch(err => {
+      console.warn("State boundary load failed:", err);
+      addCityMarkers();
+    });
+
+  // ---------------- CITY MARKERS ----------------
+  function radiusFor(tier) {
+    return ({1:6, 2:9, 3:13, 4:18})[tier] || 7;
+  }
+
+  function popupHTML(c) {
+    const tagClass = c.status === "operating" ? "t-op" : c.status === "announced" ? "t-ann" : "t-test";
+    const tagText  = c.status === "operating" ? "Operating" : c.status === "announced" ? "Announced 2026" : "Tested · not operating";
+    const launchLine =
+      c.status === "operating" ? `Public service since ${formatLaunch(c.launch)}` :
+      c.status === "announced" ? `Announced launch: ${c.launch}` :
+                                 c.launch;
+    return `
+      <div>
+        <div class="vc-pop-name">${escapeHtml(c.name)}, ${escapeHtml(c.state)}</div>
+        <span class="vc-pop-tag ${tagClass}">${tagText}</span>
+        <div>${escapeHtml(c.note)}</div>
+        <div class="vc-pop-meta">${launchLine}</div>
+      </div>
+    `;
+  }
+
+  function styleFor(c) {
+    if (c.status === "operating") {
+      return { color: "#217ebe", fillColor: "#217ebe", weight: 1.5, opacity: 1, fillOpacity: 0.78 };
+    }
+    if (c.status === "announced") {
+      return { color: "#ff7c53", fillColor: "#ff7c53", weight: 2, opacity: 1, fillOpacity: 0.0, dashArray: "3,3" };
+    }
+    return { color: "#e7466d", fillColor: "#e7466d", weight: 1.5, opacity: 1, fillOpacity: 0.85 };
+  }
+
+  function addCityMarkers() {
+    cities.forEach(c => {
+      const m = L.circleMarker([c.lat, c.lng], Object.assign({ radius: radiusFor(c.tier) }, styleFor(c)));
+      m.bindPopup(popupHTML(c), { closeButton: true, maxWidth: 280 });
+      m.addTo(map);
+
+      // Add an X overlay for tested_paused so it reads as "not operating" at a glance
+      if (c.status === "tested_paused") {
+        const icon = L.divIcon({
+          className: "vc-x-overlay",
+          html: `<svg width="18" height="18" viewBox="0 0 18 18" style="display:block;">
+                   <line x1="3" y1="3" x2="15" y2="15" stroke="#fff" stroke-width="2.4"/>
+                   <line x1="15" y1="3" x2="3" y2="15" stroke="#fff" stroke-width="2.4"/>
+                 </svg>`,
+          iconSize: [18,18],
+          iconAnchor: [9,9]
+        });
+        L.marker([c.lat, c.lng], { icon, interactive: false, keyboard: false }).addTo(map);
+      }
+    });
+  }
+
+  // ---------------- helpers ----------------
+  function formatLaunch(s) {
+    if (!s) return "";
+    if (/^\d{4}-\d{2}-\d{2}$/.test(s)) {
+      const d = new Date(s + "T00:00:00");
+      return d.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+    }
+    if (/^\d{4}-\d{2}$/.test(s)) {
+      const [y,mo] = s.split("-");
+      const d = new Date(parseInt(y,10), parseInt(mo,10)-1, 1);
+      return d.toLocaleDateString("en-US", { year: "numeric", month: "long" });
+    }
+    return s;
+  }
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, ch => ({ "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;" }[ch]));
+  }
+})();
+</script>
+</body>
+</html>
