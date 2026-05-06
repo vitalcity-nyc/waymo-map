@@ -197,6 +197,45 @@
     color: var(--vc-charcoal);
     margin-top: 4px;
   }
+  .vc-waymo-embed .vc-pop-fleet {
+    font-size: 11.5px;
+    margin-top: 6px;
+    padding-top: 6px;
+    border-top: 1px solid var(--vc-cloud);
+  }
+  .vc-waymo-embed .vc-pop-flbl {
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    color: var(--vc-charcoal);
+    margin-right: 4px;
+  }
+  .vc-waymo-embed .vc-sources {
+    padding: 10px 18px 12px;
+    border-top: 1px solid var(--vc-cloud);
+    font-size: 11px;
+    color: var(--vc-charcoal);
+    line-height: 1.5;
+  }
+  .vc-waymo-embed .vc-sources-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--vc-charcoal);
+    font-weight: 700;
+    margin-right: 6px;
+  }
+  .vc-waymo-embed .vc-sources a {
+    color: var(--vc-cerulean);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(33, 126, 190, 0.35);
+  }
+  .vc-waymo-embed .vc-sources a:hover { color: var(--vc-indigo); }
+  .vc-waymo-embed.compact .vc-sources { padding: 8px 14px 10px; }
+  @media (max-width: 560px) {
+    .vc-waymo-embed .vc-sources { padding: 10px 14px; }
+  }
 
   /* Compact mode (iframe embed): tighten padding, drop the title block */
   .vc-waymo-embed.compact .vc-header,
@@ -250,9 +289,14 @@
     <p class="vc-caveat">Bubble size reflects an estimated fleet tier; Waymo doesn't publish per-city counts. Testing isn't operating: New York permitted Waymo to test eight vehicles with safety drivers in 2024–25, but those permits expired March 31, 2026. New York, Massachusetts, and New Jersey all require a human safety operator behind the wheel under current rules — effectively barring fully driverless commercial service. Boston is debating a similar local ordinance; Seattle already has one. State-law classifications follow the National Conference of State Legislatures, the Baker Donelson 50-state survey, and recent reporting; this landscape shifts fast.</p>
   </div>
 
+  <div class="vc-sources">
+    <span class="vc-sources-label">Sources</span>
+    City status and launch dates: <a href="https://waymo.com/blog/" target="_blank" rel="noopener">Waymo</a>, <a href="https://techcrunch.com/2026/04/07/waymo-opens-robotaxi-service-in-nashville-partners-with-lyft/" target="_blank" rel="noopener">TechCrunch</a>, <a href="https://9to5google.com/2026/04/22/waymo-new-cities-features/" target="_blank" rel="noopener">9to5Google</a>, <a href="https://www.cnbc.com/2025/11/18/waymo-texas-florida-2026.html" target="_blank" rel="noopener">CNBC</a>, <a href="https://www.axios.com/2026/02/24/waymo-robotaxis-now-available-in-10-cities" target="_blank" rel="noopener">Axios</a>. Fleet sizes (where reported): <a href="https://carboncredits.com/waymo-hits-2500-robotaxi-in-u-s-the-future-of-driverless-rides/" target="_blank" rel="noopener">Carbon Credits</a>, <a href="https://www.thedriverlessdigest.com/p/waymo-stats-2025-funding-growth-coverage" target="_blank" rel="noopener">Driverless Digest</a>. NYC: <a href="https://www.thecity.nyc/2026/04/06/waymo-driverless-cars-testing-roads-autonomous-vehicle/" target="_blank" rel="noopener">THE CITY</a>, <a href="https://www.cnbc.com/2026/02/19/new-york-driverless-rideshare-nyc-waymo.html" target="_blank" rel="noopener">CNBC</a>. State law: <a href="https://www.ncsl.org/transportation/autonomous-vehicles" target="_blank" rel="noopener">NCSL</a>, <a href="https://www.bakerdonelson.com/autonomous-vehicle-statutes-and-regulations-across-the-50-states" target="_blank" rel="noopener">Baker Donelson</a>, <a href="https://stateline.org/2025/08/12/with-more-self-driving-cars-on-the-road-states-put-more-rules-in-place/" target="_blank" rel="noopener">Stateline</a>, <a href="https://www.ttnews.com/articles/boston-clampdown-robotaxis" target="_blank" rel="noopener">Transport Topics</a>.
+  </div>
+
   <div class="vc-footer">
     <span>Data as of May 6, 2026 · Map: Vital City</span>
-    <span><a href="methodology.md" target="_blank" rel="noopener">Sources &amp; method &rarr;</a></span>
+    <span><a href="methodology.md" target="_blank" rel="noopener">Full sources &amp; method &rarr;</a></span>
   </div>
 </div>
 
@@ -262,29 +306,32 @@
   // ---------------- DATA ----------------
   // Status: operating | announced | tested_paused
   // tier: 1 (small) – 4 (largest, SF Bay)
+  // fleet: a string the tooltip displays verbatim. Waymo doesn't publish per-city counts;
+  // numbers below are publicly reported in news coverage as of the date noted, and are not
+  // current to the day. Where there's no reliable public number, we say so.
   const cities = [
-    { name: "Phoenix",            state: "AZ", lat: 33.4484, lng: -112.0740, status: "operating", launch: "2020-10",       tier: 3, note: "Waymo's first public market; metro-wide service.", sources: ["techcrunch","9to5google"] },
-    { name: "San Francisco Bay",  state: "CA", lat: 37.7749, lng: -122.4194, status: "operating", launch: "2024-08",       tier: 4, note: "Largest market — over a third of the fleet.", sources: ["axios","carboncredits"] },
-    { name: "Los Angeles",        state: "CA", lat: 34.0522, lng: -118.2437, status: "operating", launch: "2024-11",       tier: 3, note: "Public service across central LA County.", sources: ["techcrunch"] },
-    { name: "Austin",             state: "TX", lat: 30.2672, lng:  -97.7431, status: "operating", launch: "2025-03",       tier: 2, note: "Public rides via the Uber app.", sources: ["techcrunch"] },
-    { name: "Atlanta",            state: "GA", lat: 33.7490, lng:  -84.3880, status: "operating", launch: "2025-06",       tier: 2, note: "Public rides via the Uber app.", sources: ["techcrunch"] },
-    { name: "Miami",              state: "FL", lat: 25.7617, lng:  -80.1918, status: "operating", launch: "2026-01-22",    tier: 2, note: "Public service via the Waymo app.", sources: ["techcrunch","9to5google"] },
-    { name: "Dallas",             state: "TX", lat: 32.7767, lng:  -96.7970, status: "operating", launch: "2026-02-24",    tier: 2, note: "Fully driverless public service.", sources: ["9to5google","techcrunch"] },
-    { name: "Houston",            state: "TX", lat: 29.7604, lng:  -95.3698, status: "operating", launch: "2026-02-24",    tier: 2, note: "Fully driverless public service.", sources: ["9to5google","techcrunch"] },
-    { name: "San Antonio",        state: "TX", lat: 29.4241, lng:  -98.4936, status: "operating", launch: "2026-02-24",    tier: 1, note: "Fully driverless public service.", sources: ["9to5google","techcrunch"] },
-    { name: "Orlando",            state: "FL", lat: 28.5383, lng:  -81.3792, status: "operating", launch: "2026-02-24",    tier: 1, note: "Fully driverless public service.", sources: ["9to5google","techcrunch"] },
-    { name: "Nashville",          state: "TN", lat: 36.1627, lng:  -86.7816, status: "operating", launch: "2026-04-07",    tier: 1, note: "Waymo's first Lyft-partnered city; dozens of vehicles in a 60-square-mile area.", sources: ["techcrunch","waymo-blog"] },
+    { name: "Phoenix",            state: "AZ", lat: 33.4484, lng: -112.0740, status: "operating", launch: "2020-10",       tier: 3, fleet: "≈400+ vehicles (reported Aug. 2025)",                  note: "Waymo's first public market; metro-wide service." },
+    { name: "San Francisco Bay",  state: "CA", lat: 37.7749, lng: -122.4194, status: "operating", launch: "2024-08",       tier: 4, fleet: ">1,000 vehicles (more than ⅓ of fleet, early 2026)", note: "Largest Waymo market; biggest contributor to total fleet." },
+    { name: "Los Angeles",        state: "CA", lat: 34.0522, lng: -118.2437, status: "operating", launch: "2024-11",       tier: 3, fleet: "Hundreds (not publicly broken out)",                    note: "Public service across central LA County. Combined LA+SF+PHX+AUS topped 1,500 vehicles in May 2025." },
+    { name: "Austin",             state: "TX", lat: 30.2672, lng:  -97.7431, status: "operating", launch: "2025-03",       tier: 2, fleet: "≈100 vehicles (reported 2025)",                          note: "Public rides via the Uber app." },
+    { name: "Atlanta",            state: "GA", lat: 33.7490, lng:  -84.3880, status: "operating", launch: "2025-06",       tier: 3, fleet: "≈500 vehicles (reported Aug. 2025)",                     note: "Public rides via the Uber app." },
+    { name: "Miami",              state: "FL", lat: 25.7617, lng:  -80.1918, status: "operating", launch: "2026-01-22",    tier: 2, fleet: "Not publicly broken out",                                note: "Public service via the Waymo app." },
+    { name: "Dallas",             state: "TX", lat: 32.7767, lng:  -96.7970, status: "operating", launch: "2026-02-24",    tier: 2, fleet: "Not publicly broken out",                                note: "Fully driverless public service." },
+    { name: "Houston",            state: "TX", lat: 29.7604, lng:  -95.3698, status: "operating", launch: "2026-02-24",    tier: 2, fleet: "Not publicly broken out",                                note: "Fully driverless public service." },
+    { name: "San Antonio",        state: "TX", lat: 29.4241, lng:  -98.4936, status: "operating", launch: "2026-02-24",    tier: 1, fleet: "Not publicly broken out",                                note: "Fully driverless public service." },
+    { name: "Orlando",            state: "FL", lat: 28.5383, lng:  -81.3792, status: "operating", launch: "2026-02-24",    tier: 1, fleet: "Not publicly broken out",                                note: "Fully driverless public service." },
+    { name: "Nashville",          state: "TN", lat: 36.1627, lng:  -86.7816, status: "operating", launch: "2026-04-07",    tier: 1, fleet: "\"Dozens\" of vehicles (Waymo, April 2026)",          note: "Waymo's first Lyft-partnered city; 60-square-mile service area." },
 
-    { name: "Washington, D.C.",   state: "DC", lat: 38.9072, lng:  -77.0369, status: "announced",     launch: "2026",          tier: 2, note: "Announced for 2026 launch.", sources: ["robotreport"] },
-    { name: "Las Vegas",          state: "NV", lat: 36.1699, lng: -115.1398, status: "announced",     launch: "2026",          tier: 1, note: "Announced for 2026 launch.", sources: ["robotreport"] },
-    { name: "Detroit",            state: "MI", lat: 42.3314, lng:  -83.0458, status: "announced",     launch: "2026",          tier: 1, note: "Announced for 2026 launch.", sources: ["robotreport"] },
-    { name: "San Diego",          state: "CA", lat: 32.7157, lng: -117.1611, status: "announced",     launch: "2026",          tier: 1, note: "Announced for 2026 launch.", sources: ["robotreport"] },
-    { name: "Denver",             state: "CO", lat: 39.7392, lng: -104.9903, status: "announced",     launch: "2026",          tier: 1, note: "Announced for 2026 launch.", sources: ["robotreport"] },
-    { name: "Minneapolis",        state: "MN", lat: 44.9778, lng:  -93.2650, status: "announced",     launch: "2026",          tier: 1, note: "Announced November 2025 for 2026 launch.", sources: ["techcrunch"] },
-    { name: "New Orleans",        state: "LA", lat: 29.9511, lng:  -90.0715, status: "announced",     launch: "2026",          tier: 1, note: "Announced November 2025 for 2026 launch.", sources: ["techcrunch"] },
-    { name: "Tampa",              state: "FL", lat: 27.9506, lng:  -82.4572, status: "announced",     launch: "2026",          tier: 1, note: "Announced November 2025 for 2026 launch.", sources: ["techcrunch"] },
+    { name: "Washington, D.C.",   state: "DC", lat: 38.9072, lng:  -77.0369, status: "announced",     launch: "2026",          tier: 2, fleet: "Not yet deployed",  note: "Announced for 2026 launch." },
+    { name: "Las Vegas",          state: "NV", lat: 36.1699, lng: -115.1398, status: "announced",     launch: "2026",          tier: 1, fleet: "Not yet deployed",  note: "Announced for 2026 launch." },
+    { name: "Detroit",            state: "MI", lat: 42.3314, lng:  -83.0458, status: "announced",     launch: "2026",          tier: 1, fleet: "Not yet deployed",  note: "Announced for 2026 launch." },
+    { name: "San Diego",          state: "CA", lat: 32.7157, lng: -117.1611, status: "announced",     launch: "2026",          tier: 1, fleet: "Not yet deployed",  note: "Announced for mid-2026 launch." },
+    { name: "Denver",             state: "CO", lat: 39.7392, lng: -104.9903, status: "announced",     launch: "2026",          tier: 1, fleet: "Not yet deployed",  note: "Announced for 2026 launch." },
+    { name: "Minneapolis",        state: "MN", lat: 44.9778, lng:  -93.2650, status: "announced",     launch: "2026",          tier: 1, fleet: "Not yet deployed",  note: "Announced November 2025 for 2026 launch." },
+    { name: "New Orleans",        state: "LA", lat: 29.9511, lng:  -90.0715, status: "announced",     launch: "2026",          tier: 1, fleet: "Not yet deployed",  note: "Announced November 2025 for 2026 launch." },
+    { name: "Tampa",              state: "FL", lat: 27.9506, lng:  -82.4572, status: "announced",     launch: "2026",          tier: 1, fleet: "Not yet deployed",  note: "Announced November 2025 for 2026 launch." },
 
-    { name: "New York City",      state: "NY", lat: 40.7831, lng:  -73.9712, status: "tested_paused", launch: "Tested 2024–25", tier: 1, note: "Eight cars tested with safety drivers in Manhattan and Downtown Brooklyn. State testing permits expired March 31, 2026; Gov. Hochul withdrew her commercial-rideshare proposal in February with NYC explicitly excluded; Mayor Mamdani has not committed to renewal.", sources: ["thecity","streetsblog","cnbc"] }
+    { name: "New York City",      state: "NY", lat: 40.7831, lng:  -73.9712, status: "tested_paused", launch: "Tested 2024–25", tier: 1, fleet: "8 vehicles during 2024–25 testing (no current operations)", note: "Tested with safety drivers in Manhattan and Downtown Brooklyn. State testing permits expired March 31, 2026; Gov. Hochul withdrew her commercial-rideshare proposal in February with NYC explicitly excluded; Mayor Mamdani has not committed to renewal." }
   ];
 
   // State legal landscape (best-effort, sourced in methodology.md)
@@ -387,11 +434,13 @@
       c.status === "operating" ? `Public service since ${formatLaunch(c.launch)}` :
       c.status === "announced" ? `Announced launch: ${c.launch}` :
                                  c.launch;
+    const fleetLine = c.fleet ? `<div class="vc-pop-fleet"><span class="vc-pop-flbl">Fleet:</span> ${escapeHtml(c.fleet)}</div>` : "";
     return `
       <div>
         <div class="vc-pop-name">${escapeHtml(c.name)}, ${escapeHtml(c.state)}</div>
         <span class="vc-pop-tag ${tagClass}">${tagText}</span>
         <div>${escapeHtml(c.note)}</div>
+        ${fleetLine}
         <div class="vc-pop-meta">${launchLine}</div>
       </div>
     `;
