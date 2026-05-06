@@ -29,7 +29,7 @@ Three categories, layered as a light background tint:
 
 ## City-by-city sources
 
-### Operating (10 cities, ~3,000 vehicles total)
+### Operating (11 cities, ~3,000 vehicles total)
 
 | City | Public launch | Notes |
 |---|---|---|
@@ -38,22 +38,28 @@ Three categories, layered as a light background tint:
 | Los Angeles, CA | November 2024 | Public service across central LA County. |
 | Austin, TX | March 2025 | Public rides via the Uber app. |
 | Atlanta, GA | June 2025 | Public rides via the Uber app. |
-| Miami, FL | Early 2026 | Public service launched early 2026. |
+| Miami, FL | January 22, 2026 | Public service via the Waymo app. |
 | Dallas, TX | February 24, 2026 | Fully driverless public service. |
 | Houston, TX | February 24, 2026 | Fully driverless public service. |
 | San Antonio, TX | February 24, 2026 | Fully driverless public service. |
 | Orlando, FL | February 24, 2026 | Fully driverless public service. |
+| Nashville, TN | April 7, 2026 | Waymo's first Lyft-partnered city. Dozens of vehicles in a 60-square-mile area; rolling-invite rollout. |
 
 Sources:
+- TechCrunch, "Waymo opens robotaxi service in Nashville, partners with Lyft," Apr. 7, 2026.
+- TechCrunch, "Waymo continues robotaxi ramp up with Miami service now open to public," Jan. 22, 2026.
 - TechCrunch, "Waymo robotaxis are now operating in 10 US cities," Feb. 24, 2026.
 - Axios, "Waymo robotaxis now available in 10 cities," Feb. 24, 2026.
-- 9to5Google, "Waymo: Where it's available, upcoming cities, and new features," Feb. and Apr. 2026 updates.
+- 9to5Google, "Waymo: Where it's available, upcoming cities, and new features," April 22, 2026 update (confirmed 11-city total).
 - Carbon Credits, "Waymo hits 2,500 robotaxis in U.S." (fleet sizing).
+- Waymo blog, "Your Waymo ride, now arriving in Nashville," April 2026.
 - Waymo, "Scaling our fleet through U.S. manufacturing," May 2025.
 
-### Announced for 2026 (9 U.S. cities)
+### Announced for 2026 (8 U.S. cities)
 
-Washington, D.C.; Nashville; Las Vegas; Detroit; San Diego; Denver; Minneapolis; New Orleans; Tampa.
+Washington, D.C.; Las Vegas; Detroit; San Diego; Denver; Minneapolis; New Orleans; Tampa.
+
+(Nashville was on this list as recently as Feb. 2026; it moved to the operating column on April 7, 2026.)
 
 Sources:
 - The Robot Report, "Waymo laying groundwork to bring robotaxis to 4 more cities."
