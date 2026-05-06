@@ -192,6 +192,20 @@
   .vc-waymo-embed .vc-pop-tag.t-op   { background: var(--vc-cerulean); color: var(--vc-white); }
   .vc-waymo-embed .vc-pop-tag.t-ann  { background: var(--vc-orange); color: var(--vc-black); }
   .vc-waymo-embed .vc-pop-tag.t-test { background: var(--vc-magenta); color: var(--vc-white); }
+  .vc-waymo-embed .vc-pop-tag.k-rest { background: var(--vc-magenta); color: var(--vc-white); }
+  .vc-waymo-embed .vc-pop-tag.k-amb  { background: var(--vc-cloud); color: var(--vc-black); }
+  .vc-waymo-embed .vc-pop-tag.k-perm { background: var(--vc-white); color: var(--vc-black); border: 1px solid var(--vc-cloud); }
+  .vc-waymo-embed .vc-pop-state-headline {
+    font-weight: 600;
+    font-size: 12.5px;
+    margin-top: 4px;
+    margin-bottom: 4px;
+  }
+  .vc-waymo-embed .vc-pop-state-body {
+    font-size: 12px;
+    color: var(--vc-black);
+    line-height: 1.5;
+  }
   .vc-waymo-embed .vc-pop-meta {
     font-size: 11px;
     color: var(--vc-charcoal);
@@ -349,6 +363,23 @@
     VT:"ambiguous", VA:"permissive", WA:"ambiguous", WV:"ambiguous", WI:"permissive", WY:"ambiguous"
   };
 
+  // Detailed descriptions for restrictive states. Permissive / ambiguous states get a
+  // shorter classification line via the popup template.
+  const stateNotes = {
+    NY: {
+      headline: "Effectively bars driverless commercial service",
+      body: "New York state law requires drivers to keep a hand on the wheel at all times. New York City permitted Waymo to test eight vehicles with safety drivers starting in 2024; those permits expired March 31, 2026. Gov. Kathy Hochul's commercial-rideshare proposal was withdrawn in February 2026 with NYC explicitly excluded. Mayor Mamdani has not committed to renewing local permits."
+    },
+    MA: {
+      headline: "Effectively bars driverless commercial service",
+      body: "Massachusetts state guidance requires a human safety operator in the driver's seat at all times during autonomous-vehicle operation. Sen. Ed Markey opened a federal investigation into AV companies' use of remote operators in 2025. Boston is separately debating a city ordinance that would require an in-vehicle human operator and pause AV deployment pending a study."
+    },
+    NJ: {
+      headline: "Effectively bars driverless commercial service",
+      body: "New Jersey has no enabling autonomous-vehicle statute. The state's Advanced Autonomous Vehicle Task Force recommended that all on-road testing be conducted with a safety driver present. There is no state-sanctioned pathway for fully driverless commercial service."
+    }
+  };
+
   const stateNameToAbbr = {
     "Alabama":"AL","Alaska":"AK","Arizona":"AZ","Arkansas":"AR","California":"CA",
     "Colorado":"CO","Connecticut":"CT","Delaware":"DE","District of Columbia":"DC","Florida":"FL",
@@ -404,16 +435,73 @@
     return { fillColor: "#ffffff", fillOpacity: 0, color: "#cfcfcf", weight: 0.6, opacity: 0.7 };
   };
 
+  function statePopupHTML(stateName, abbr) {
+    const klass = stateClass[abbr] || "permissive";
+    const klassLabel =
+      klass === "restrictive" ? "Restrictive" :
+      klass === "ambiguous"   ? "No AV statute" :
+                                "Permissive";
+    const klassClass =
+      klass === "restrictive" ? "k-rest" :
+      klass === "ambiguous"   ? "k-amb" :
+                                "k-perm";
+
+    const detail = stateNotes[abbr];
+    if (detail) {
+      return `
+        <div>
+          <div class="vc-pop-name">${escapeHtml(stateName)}</div>
+          <span class="vc-pop-tag vc-pop-state ${klassClass}">${klassLabel}</span>
+          <div class="vc-pop-state-headline">${escapeHtml(detail.headline)}</div>
+          <div class="vc-pop-state-body">${escapeHtml(detail.body)}</div>
+        </div>
+      `;
+    }
+
+    const generic =
+      klass === "ambiguous"
+        ? "No autonomous-vehicle statute on the books. Operation is neither explicitly authorized nor prohibited; status varies by interpretation."
+        : "Driverless commercial operation is allowed under enacted state statute or active state permits.";
+
+    return `
+      <div>
+        <div class="vc-pop-name">${escapeHtml(stateName)}</div>
+        <span class="vc-pop-tag vc-pop-state ${klassClass}">${klassLabel}</span>
+        <div class="vc-pop-state-body">${generic}</div>
+      </div>
+    `;
+  }
+
   const STATES_URL = "https://raw.githubusercontent.com/PublicaMundi/MappingAPI/master/data/geojson/us-states.json";
   fetch(STATES_URL)
     .then(r => r.json())
     .then(geo => {
+      const svgRenderer = L.svg({ padding: 0.3 });
       L.geoJSON(geo, {
+        renderer: svgRenderer,
         style: f => {
           const abbr = stateNameToAbbr[f.properties.name] || stateNameToAbbr[f.properties.NAME] || "";
           return stateStyle(stateClass[abbr] || "permissive");
         },
-        interactive: false
+        onEachFeature: (feature, layer) => {
+          const stateName = feature.properties.name || feature.properties.NAME || "";
+          const abbr = stateNameToAbbr[stateName] || "";
+          if (!abbr) return;
+          layer.bindPopup(statePopupHTML(stateName, abbr), { closeButton: true, maxWidth: 320 });
+          // Subtle hover affordance, especially for restrictive states
+          const baseStyle = stateStyle(stateClass[abbr] || "permissive");
+          layer.on("mouseover", () => {
+            const klass = stateClass[abbr] || "permissive";
+            if (klass === "restrictive") {
+              layer.setStyle({ fillOpacity: 0.45, weight: 2, color: "#c5305a" });
+            } else if (klass === "ambiguous") {
+              layer.setStyle({ fillOpacity: 0.55, weight: 1.2, color: "#a0a0a0" });
+            } else {
+              layer.setStyle({ fillOpacity: 0.08, weight: 1.2, color: "#a0a0a0" });
+            }
+          });
+          layer.on("mouseout", () => layer.setStyle(baseStyle));
+        }
       }).addTo(map);
       addCityMarkers();
     })
