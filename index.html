@@ -583,6 +583,41 @@
   function escapeHtml(s) {
     return String(s).replace(/[&<>"']/g, ch => ({ "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;" }[ch]));
   }
+
+  // ---------------- AUTO-RESIZE (for parent iframes) ----------------
+  // When embedded as an iframe, post our content height to the parent so it can
+  // size the iframe to fit and avoid a vertical scrollbar.
+  (function setupAutoResize() {
+    if (window.parent === window) return; // not embedded
+    const root = document.getElementById("vcWaymoEmbed");
+    if (!root) return;
+
+    let lastH = 0;
+    function postHeight() {
+      const h = Math.max(root.scrollHeight, root.getBoundingClientRect().height);
+      const rounded = Math.ceil(h);
+      if (Math.abs(rounded - lastH) < 2) return;
+      lastH = rounded;
+      try {
+        window.parent.postMessage({ type: "vc-waymo-resize", height: rounded }, "*");
+      } catch (e) { /* ignore */ }
+    }
+
+    // Initial + after fonts/tiles settle
+    postHeight();
+    setTimeout(postHeight, 200);
+    setTimeout(postHeight, 800);
+    setTimeout(postHeight, 1800);
+
+    if (typeof ResizeObserver !== "undefined") {
+      const ro = new ResizeObserver(postHeight);
+      ro.observe(root);
+    } else {
+      window.addEventListener("resize", postHeight);
+    }
+    // The map fires its own load events; resync after Leaflet is done
+    window.addEventListener("load", () => setTimeout(postHeight, 300));
+  })();
 })();
 </script>
 </body>
