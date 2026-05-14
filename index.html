@@ -7,6 +7,7 @@
 <meta name="description" content="Where Waymo robotaxis are running, coming, or stalled — and where state law currently bars driverless commercial operation.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://use.typekit.net/qqk2vto.css">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
@@ -15,34 +16,48 @@
   .vc-waymo-embed * {
     box-sizing: border-box;
   }
+  @font-face {
+    font-family: 'GascogneTS';
+    src: url('https://vital-city-nyc.github.io/vital-city-design-system/fonts/GascogneTS-Light.ttf') format('truetype');
+    font-weight: 300; font-style: normal; font-display: swap;
+  }
   .vc-waymo-embed {
     --vc-black: #050507;
     --vc-white: #ffffff;
     --vc-cloud: #dddddd;
+    --vc-cloud-50: #eeeeee;
+    --vc-paper: #f7f7f4;
     --vc-charcoal: #707175;
     --vc-cerulean: #217ebe;
     --vc-orange: #ff7c53;
+    --vc-orange-20: #fde5dd;
     --vc-magenta: #e7466d;
     --vc-chartreuse: #dde44c;
     --vc-rose: #cea9be;
     --vc-indigo: #394882;
 
-    font-family: "Atlas Grotesk", "halyard-text", "Inter", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+    --vc-sans: "halyard-text", "Inter", "Helvetica Neue", Arial, sans-serif;
+    --vc-serif: "GascogneTS", "Source Serif 4", Georgia, "Times New Roman", serif;
+
+    font-family: var(--vc-sans);
+    font-weight: 300;
     color: var(--vc-black);
     background: var(--vc-white);
-    line-height: 1.4;
+    line-height: 1.5;
     width: 100%;
-    max-width: 1100px;
+    max-width: 880px;
     margin: 0 auto;
-    border: 1px solid var(--vc-cloud);
-    border-radius: 4px;
+    border: 1px solid var(--vc-black);
+    border-radius: 0;
     overflow: hidden;
   }
   .vc-waymo-embed .vc-header {
-    padding: 14px 18px 10px;
+    padding: 22px 24px 20px;
     border-bottom: 1px solid var(--vc-cloud);
+    background: var(--vc-white);
   }
   .vc-waymo-embed .vc-kicker {
+    font-family: var(--vc-sans);
     font-size: 11px;
     font-weight: 700;
     letter-spacing: 0.12em;
@@ -51,39 +66,54 @@
   }
   .vc-waymo-embed .vc-kicker .vc-kicker-sep { color: var(--vc-cloud); margin: 0 6px; }
   .vc-waymo-embed .vc-title {
-    font-size: 22px;
+    font-family: var(--vc-sans);
+    font-size: 1.35rem;
     font-weight: 700;
     line-height: 1.2;
-    margin: 4px 0 4px;
-    letter-spacing: -0.01em;
+    color: var(--vc-black);
+    letter-spacing: -0.005em;
+    margin: 0 0 8px;
   }
   .vc-waymo-embed .vc-dek {
-    font-size: 14px;
-    color: var(--vc-charcoal);
-    max-width: 720px;
+    font-family: var(--vc-sans);
+    font-size: 0.92rem;
+    font-weight: 300;
+    line-height: 1.5;
+    color: var(--vc-black);
+    max-width: 62ch;
   }
+  .vc-waymo-embed .vc-dek strong,
+  .vc-waymo-embed .vc-dek b { font-weight: 700; color: var(--vc-black); }
   .vc-waymo-embed .vc-stats {
-    display: flex;
-    gap: 22px;
-    padding: 10px 18px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    background: var(--vc-paper);
     border-bottom: 1px solid var(--vc-cloud);
-    flex-wrap: wrap;
-    background: #fafafa;
   }
+  .vc-waymo-embed .vc-stat {
+    padding: 14px 16px 12px;
+    border-right: 1px solid var(--vc-cloud);
+  }
+  .vc-waymo-embed .vc-stat:last-child { border-right: none; }
   .vc-waymo-embed .vc-stat .vc-num {
     display: block;
-    font-size: 22px;
-    font-weight: 700;
+    font-family: var(--vc-serif);
+    font-weight: 300;
+    font-size: 1.7rem;
     line-height: 1;
-    letter-spacing: -0.01em;
+    color: var(--vc-black);
+    letter-spacing: 0;
+    margin-bottom: 4px;
   }
   .vc-waymo-embed .vc-stat .vc-lbl {
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--vc-charcoal);
-    margin-top: 4px;
     display: block;
+    font-family: var(--vc-sans);
+    font-weight: 700;
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--vc-charcoal);
+    margin-top: 0;
   }
   .vc-waymo-embed .vc-map {
     width: 100%;
@@ -266,11 +296,15 @@
 
   /* Mobile */
   @media (max-width: 560px) {
-    .vc-waymo-embed .vc-title { font-size: 19px; }
+    .vc-waymo-embed .vc-title { font-size: 1.35rem; }
     .vc-waymo-embed .vc-map { height: 380px; }
-    .vc-waymo-embed .vc-stats { gap: 14px; padding: 10px 14px; }
-    .vc-waymo-embed .vc-stat .vc-num { font-size: 18px; }
-    .vc-waymo-embed .vc-header { padding: 12px 14px 8px; }
+    .vc-waymo-embed .vc-stats { grid-template-columns: repeat(2, 1fr); }
+    .vc-waymo-embed .vc-stat { border-bottom: 1px solid var(--vc-cloud); }
+    .vc-waymo-embed .vc-stat:nth-child(2) { border-right: none; }
+    .vc-waymo-embed .vc-stat:nth-last-child(-n+2) { border-bottom: none; }
+    .vc-waymo-embed .vc-stat .vc-num { font-size: 1.45rem; }
+    .vc-waymo-embed .vc-header { padding: 18px 18px 14px; }
+    .vc-waymo-embed .vc-dek { font-size: 0.88rem; }
     .vc-waymo-embed .vc-legend { padding: 10px 14px; font-size: 11.5px; }
     .vc-waymo-embed .vc-footer { padding: 10px 14px; }
   }
@@ -281,7 +315,7 @@
 <div class="vc-waymo-embed" id="vcWaymoEmbed">
   <header class="vc-header">
     <h1 class="vc-title">Where's Waymo?</h1>
-    <p class="vc-dek">Waymo serves about 3,000 robotaxis across 11 U.S. cities, with another eight announced for 2026. New York City sits in a different category: tested, then halted.</p>
+    <p class="vc-dek">Waymo serves about <strong>3,000</strong> robotaxis across <strong>11</strong> U.S. cities, with another eight announced for 2026. New York City sits in a different category: tested, then halted.</p>
   </header>
 
   <div class="vc-stats">
