@@ -3,7 +3,7 @@
 **Last updated:** May 6, 2026
 **Maintainer:** Vital City
 
-This map shows where Waymo operates U.S. robotaxi service, where it has announced 2026 launches, where it has tested without commercial deployment, and how state law treats driverless commercial operation. Nothing here is a black box — every status, date, and classification is sourced below.
+This map shows where Waymo operates U.S. robotaxi service, where it has announced 2026 launches, where it has tested without commercial deployment, and how state law treats driverless commercial operation. Every status, date, and classification is sourced below.
 
 ---
 
@@ -16,14 +16,14 @@ Three categories:
 - **Announced for 2026** — Waymo has publicly committed to launch but service isn't yet open to the public.
 - **Tested, not operating** — Waymo has driven cars in the city (typically with safety drivers) but no commercial service exists, and there is no near-term path to one.
 
-### State legal landscape
+### State law
 Three categories, layered as a light background tint:
 
 - **Permissive** — driverless commercial operation is legally allowed under existing state law (with permitting requirements that vary).
 - **No autonomous-vehicle statute** — the state has not enacted AV-specific legislation; operation is neither explicitly authorized nor prohibited, and varies by interpretation.
 - **Effectively bars driverless commercial** — state law or regulation requires a human safety operator behind the wheel at all times, has no commercial pathway, or has explicitly excluded commercial driverless rideshare. Currently New York, Massachusetts, and New Jersey.
 
-**This landscape changes often.** State legislatures are actively considering AV bills; classifications here reflect publicly reported status as of the "last updated" date and should be re-checked before publication.
+**These laws change often.** State legislatures are actively considering AV bills; classifications here reflect publicly reported status as of the "last updated" date and should be re-checked before publication.
 
 ---
 
